@@ -1,3 +1,4 @@
+import { TaskForm } from "@/components/TaskForm";
 import { TaskList } from "@/components/TaskList";
 import { TaskEntity } from "@/types/entity";
 import { Card, List, Typography } from "antd";
@@ -18,8 +19,9 @@ export default async function TaskIndexPage() {
   const data = await fetchData();
 
   return (
-    <div>
+    <Card title={"Task"} extra={`Total ${data.length}`} className="!m-4">
+      <TaskForm />
       <TaskList data={data} />
-    </div>
+    </Card>
   );
 }

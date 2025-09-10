@@ -7,18 +7,24 @@ import { MessageInstance } from "antd/es/message/interface";
 import { Fleur_De_Leah } from "next/font/google";
 import { Fragment, useTransition } from "react";
 
+// // destruction => object, array
+// const data = [1, 2, 3];
+// const [data1, data2, data3] = data;
+// const obj = { a: 10, b: 20 };
+// const { a, b } = obj;
+
 export const TaskList = ({ data }: { data: TaskEntity[] }) => {
   const [messageApi, contextHolder] = message.useMessage();
 
   return (
-    <Card title={"Tasks"} extra={`Total Data ${data.length}`}>
+    <Fragment>
       {contextHolder}
       <List
         bordered
         dataSource={data}
         renderItem={(item) => <TaskItem item={item} messageApi={messageApi} />}
       />
-    </Card>
+    </Fragment>
   );
 };
 
