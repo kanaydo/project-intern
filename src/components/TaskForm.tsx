@@ -4,6 +4,7 @@ import { createTask, updateTask } from "@/app/tasks/actions";
 import { TaskEntity } from "@/types/entity";
 import { Button, Form, Input, message } from "antd";
 import { useTransition } from "react";
+import { useTaskContext } from "./TaskProvider";
 
 export const TaskForm = ({
   task,
@@ -14,7 +15,7 @@ export const TaskForm = ({
 }) => {
   const [formInstance] = Form.useForm();
   const [isPending, startTransition] = useTransition();
-  const [messageApi, contextHolder] = message.useMessage();
+  const { messageApi, test } = useTaskContext();
 
   const create = (values: { title: string; content: string }) => {
     startTransition(async () => {
@@ -58,7 +59,7 @@ export const TaskForm = ({
       layout="vertical"
       initialValues={task}
     >
-      {contextHolder}
+      {test}
       <Form.Item name={"title"} label={"Title"}>
         <Input />
       </Form.Item>
