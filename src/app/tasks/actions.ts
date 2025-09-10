@@ -1,5 +1,6 @@
 "use server";
 
+import { TaskFormData } from "@/types/formData";
 import { revalidatePath } from "next/cache";
 
 export const destroyTask = async (id: string) => {
@@ -17,10 +18,7 @@ export const destroyTask = async (id: string) => {
   }
 };
 
-export const createTask = async (params: {
-  title: string;
-  content: string;
-}) => {
+export const createTask = async (params: TaskFormData) => {
   const response = await fetch(
     `https://68bfde830b196b9ce1c249b2.mockapi.io/api/v1/tasks`,
     {
@@ -37,13 +35,7 @@ export const createTask = async (params: {
   }
 };
 
-export const updateTask = async (
-  id: string,
-  params: {
-    title: string;
-    content: string;
-  }
-) => {
+export const updateTask = async (id: string, params: TaskFormData) => {
   const response = await fetch(
     `https://68bfde830b196b9ce1c249b2.mockapi.io/api/v1/tasks/${id}`,
     {

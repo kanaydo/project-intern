@@ -5,6 +5,7 @@ import { TaskEntity } from "@/types/entity";
 import { Button, Form, Input, message } from "antd";
 import { useTransition } from "react";
 import { useTaskContext } from "./TaskProvider";
+import { TaskFormData } from "@/types/formData";
 
 export const TaskForm = ({
   task,
@@ -17,7 +18,7 @@ export const TaskForm = ({
   const [isPending, startTransition] = useTransition();
   const { messageApi, test } = useTaskContext();
 
-  const create = (values: { title: string; content: string }) => {
+  const create = (values: TaskFormData) => {
     startTransition(async () => {
       const result = await createTask(values);
       if (result.success) {
@@ -29,7 +30,7 @@ export const TaskForm = ({
     });
   };
 
-  const update = (id: string, values: { title: string; content: string }) => {
+  const update = (id: string, values: TaskFormData) => {
     startTransition(async () => {
       const result = await updateTask(id, values);
       if (result.success) {
@@ -43,7 +44,7 @@ export const TaskForm = ({
     });
   };
 
-  const submit = (values: { title: string; content: string }) => {
+  const submit = (values: TaskFormData) => {
     if (task == undefined) {
       create(values);
     } else {
@@ -64,7 +65,11 @@ export const TaskForm = ({
         <Input />
       </Form.Item>
       <Form.Item name={"content"} label={"Content"}>
-        <Input.TextArea />
+        <Input.TextArea
+          onChange={() => {
+            console.log("hello");
+          }}
+        />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" loading={isPending}>
