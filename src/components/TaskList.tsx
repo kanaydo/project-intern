@@ -6,12 +6,7 @@ import { Button, Card, Flex, List, message, Typography } from "antd";
 import { MessageInstance } from "antd/es/message/interface";
 import { Fleur_De_Leah } from "next/font/google";
 import { Fragment, useTransition } from "react";
-
-// // destruction => object, array
-// const data = [1, 2, 3];
-// const [data1, data2, data3] = data;
-// const obj = { a: 10, b: 20 };
-// const { a, b } = obj;
+import { TaskUpdate } from "./TaskUpdate";
 
 export const TaskList = ({ data }: { data: TaskEntity[] }) => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -52,9 +47,12 @@ const TaskItem = ({
     <List.Item className="!w-full">
       <Flex justify="space-between" className="!w-full">
         <div>{item.title}</div>
-        <Button danger loading={isPending} onClick={destroy}>
-          Hapus
-        </Button>
+        <Flex gap={"small"}>
+          <TaskUpdate task={item} />
+          <Button danger loading={isPending} onClick={destroy}>
+            Hapus
+          </Button>
+        </Flex>
       </Flex>
     </List.Item>
   );
