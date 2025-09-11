@@ -1,12 +1,14 @@
 "use client";
 
 import { TaskEntity } from "@/types/entity";
-import { Button, Flex, Table, TableProps } from "antd";
+import { Alert, Button, Flex, Table, TableProps } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TaskUpdate } from "./TaskUpdate";
 import { TaskDestroy } from "./TaskDestroy";
+import { indexTask } from "@/app/tasks/actions";
+import useSWR from "swr";
 
-export const TaskTable = ({ data }: { data: TaskEntity[] }) => {
+export const TaskTable = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -30,10 +32,29 @@ export const TaskTable = ({ data }: { data: TaskEntity[] }) => {
     },
   ];
 
+  const fetcher = async () => {
+    const result = await indexTask(
+      parseInt(searchParams.get("page") ?? "1"),
+      parseInt(searchParams.get("limit") ?? "10")
+    );
+    if (result.success) {
+      return result.data;
+    } else {
+      throw new Error(result.message);
+    }
+  };
+
+  const { data, isLoading, error } = useSWR(searchParams.toString(), fetcher);
+
+  if (error) {
+    return <Alert description={`${error}`} type="error" />;
+  }
+
   return (
     <Table<TaskEntity>
+      loading={isLoading}
       columns={columns}
-      dataSource={data}
+      dataSource={data ?? []}
       bordered
       pagination={{
         total: 97,

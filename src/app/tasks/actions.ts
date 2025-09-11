@@ -1,7 +1,7 @@
 "use server";
 
+import { TaskEntity } from "@/types/entity";
 import { TaskFormData } from "@/types/formData";
-import { revalidatePath } from "next/cache";
 
 export const destroyTask = async (id: string) => {
   const response = await fetch(
@@ -11,7 +11,6 @@ export const destroyTask = async (id: string) => {
     }
   );
   if (response.ok) {
-    revalidatePath("/tasks");
     return { success: true, message: "Berhasil Hapus Data" };
   } else {
     return { success: false, data: "Gagal Hapus Data" };
@@ -28,7 +27,6 @@ export const createTask = async (params: TaskFormData) => {
     }
   );
   if (response.ok) {
-    revalidatePath("/tasks");
     return { success: true, message: "Berhasil Menambah Data" };
   } else {
     return { success: false, data: "Gagal Menambah Data" };
@@ -45,9 +43,20 @@ export const updateTask = async (id: string, params: TaskFormData) => {
     }
   );
   if (response.ok) {
-    revalidatePath("/tasks");
     return { success: true, message: "Berhasil Mengubah  Data" };
   } else {
     return { success: false, data: "Gagal Mengubah Data" };
+  }
+};
+
+export const indexTask = async (page: number, limit: number) => {
+  const result = await fetch(
+    `https://68bfde830b196b9ce1c249b2.mockapi.io/api/v1/tasks?page=${page}&limit=${limit}`
+  );
+  if (result.ok) {
+    const data: TaskEntity[] = await result.json();
+    return { success: true, data: data };
+  } else {
+    return { success: false, message: "gagal tarik data" };
   }
 };

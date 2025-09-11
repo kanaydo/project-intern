@@ -6,6 +6,8 @@ import { Button, Form, Input, message } from "antd";
 import { useTransition } from "react";
 import { useTaskContext } from "./TaskProvider";
 import { TaskFormData } from "@/types/formData";
+import { useSearchParams } from "next/navigation";
+import { useSWRConfig } from "swr";
 
 export const TaskForm = ({
   task,
@@ -17,12 +19,15 @@ export const TaskForm = ({
   const [formInstance] = Form.useForm();
   const [isPending, startTransition] = useTransition();
   const { messageApi, test } = useTaskContext();
+  const searchParams = useSearchParams();
+  const { mutate } = useSWRConfig();
 
   const create = (values: TaskFormData) => {
     startTransition(async () => {
       const result = await createTask(values);
       if (result.success) {
         formInstance.resetFields();
+        mutate(searchParams.toString());
         messageApi.success(result.message);
       } else {
         messageApi.error(result.message);
@@ -35,6 +40,7 @@ export const TaskForm = ({
       const result = await updateTask(id, values);
       if (result.success) {
         messageApi.success(result.message);
+        mutate(searchParams.toString());
         if (onSuccess) {
           onSuccess();
         }
@@ -61,10 +67,18 @@ export const TaskForm = ({
       initialValues={task}
     >
       {test}
-      <Form.Item name={"title"} label={"Title"}>
+      <Form.Item
+        name={"title"}
+        label={"Title"}
+        rules={[{ required: true, message: "tidak boleh kosong" }]}
+      >
         <Input />
       </Form.Item>
-      <Form.Item name={"content"} label={"Content"}>
+      <Form.Item
+        name={"content"}
+        label={"Content"}
+        rules={[{ required: true, message: "tidak boleh kosong" }]}
+      >
         <Input.TextArea
           onChange={() => {
             console.log("hello");
