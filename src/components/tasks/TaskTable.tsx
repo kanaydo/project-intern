@@ -1,8 +1,10 @@
 "use client";
 
 import { TaskEntity } from "@/types/entity";
-import { Table, TableProps } from "antd";
+import { Button, Flex, Table, TableProps } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
+import { TaskUpdate } from "./TaskUpdate";
+import { TaskDestroy } from "./TaskDestroy";
 
 export const TaskTable = ({ data }: { data: TaskEntity[] }) => {
   const router = useRouter();
@@ -19,7 +21,12 @@ export const TaskTable = ({ data }: { data: TaskEntity[] }) => {
     },
     {
       title: "Actions",
-      render: () => <div>actions</div>,
+      render: (_, record) => (
+        <Flex gap={"small"}>
+          <TaskUpdate task={record} />
+          <TaskDestroy task={record} />
+        </Flex>
+      ),
     },
   ];
 
@@ -38,6 +45,7 @@ export const TaskTable = ({ data }: { data: TaskEntity[] }) => {
         const pageSize = pagination.pageSize ?? 10;
         router.replace(`/tasks?page=${current}&limit=${pageSize}`);
       }}
+      rowKey={(record) => record.id}
     />
   );
 };
