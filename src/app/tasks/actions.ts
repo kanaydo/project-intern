@@ -49,7 +49,13 @@ export const updateTask = async (id: string, params: TaskFormData) => {
   }
 };
 
-export const indexTask = async (page: number, limit: number) => {
+export const indexTask = async ({
+  page,
+  limit,
+}: {
+  page: number;
+  limit: number;
+}) => {
   const result = await fetch(
     `https://68bfde830b196b9ce1c249b2.mockapi.io/api/v1/tasks?page=${page}&limit=${limit}`
   );

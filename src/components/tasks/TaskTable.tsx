@@ -7,6 +7,7 @@ import { TaskUpdate } from "./TaskUpdate";
 import { TaskDestroy } from "./TaskDestroy";
 import { indexTask } from "@/app/tasks/actions";
 import useSWR from "swr";
+import Link from "next/link";
 
 export const TaskTable = () => {
   const router = useRouter();
@@ -16,6 +17,9 @@ export const TaskTable = () => {
     {
       title: "Title",
       dataIndex: "title",
+      render: (text, record) => (
+        <Link href={`/tasks/${record.id}`}>{text}</Link>
+      ),
     },
     {
       title: "Content",
@@ -33,10 +37,10 @@ export const TaskTable = () => {
   ];
 
   const fetcher = async () => {
-    const result = await indexTask(
-      parseInt(searchParams.get("page") ?? "1"),
-      parseInt(searchParams.get("limit") ?? "10")
-    );
+    const result = await indexTask({
+      limit: parseInt(searchParams.get("limit") ?? "10"),
+      page: parseInt(searchParams.get("page") ?? "1"),
+    });
     if (result.success) {
       return result.data;
     } else {
