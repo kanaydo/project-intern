@@ -23,10 +23,10 @@ export const UserIndexTable = ({ users }: { users: UserEntity[] }) => {
     },
     {
       title: "Actions",
-      render: (_, __) => {
+      render: (_, record) => {
         return (
           <div>
-            <Button>Edit</Button>
+            <Button href={`/users/${record.id}/edit`}>Edit</Button>
             <Button>Hapus</Button>
           </div>
         );

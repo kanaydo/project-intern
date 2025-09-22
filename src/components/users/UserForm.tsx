@@ -2,40 +2,48 @@
 
 import { Button, Form, Input, message } from "antd";
 import { useTransition } from "react";
-import { UserEntity } from "./entity";
+import { UserEntity, UserFormData } from "./entity";
 import { useRouter } from "next/navigation";
+import { createUser, updateUser } from "@/app/users/actions";
 
-export const UserForm = () => {
+export const UserForm = ({ user }: { user?: UserEntity }) => {
   const [formInstance] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  const submit = async (values: {
-    name: string;
-    email: string;
-    address: string;
-  }) => {
+  const create = (values: UserFormData) => {
     startTransition(async () => {
-      const result = await fetch(
-        "https://68ce1f186dc3f350777e2b76.mockapi.io/api/v1/users",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        }
-      );
-      if (result.ok) {
+      const result = await createUser(values);
+      if (result.success) {
         messageApi.success("Berhasil Tambah Data");
         formInstance.resetFields();
-        const data: UserEntity = await result.json();
-        router.replace(`/users/${data.id}`);
+        router.replace(`/users/${result.data?.id}`);
       } else {
         messageApi.error("Gagal Tambah Data");
       }
     });
+  };
+
+  const update = (id: string, values: UserFormData) => {
+    startTransition(async () => {
+      const result = await updateUser(id, values);
+      if (result.success) {
+        messageApi.success("Berhasil Ubah Data");
+        formInstance.resetFields();
+        router.replace(`/users/${result.data?.id}`);
+      } else {
+        messageApi.error("Gagal Ubah Data");
+      }
+    });
+  };
+
+  const submit = async (values: UserFormData) => {
+    if (user) {
+      update(user.id, values);
+    } else {
+      create(values);
+    }
   };
 
   return (
@@ -44,8 +52,8 @@ export const UserForm = () => {
       form={formInstance}
       onFinish={submit}
       disabled={isPending}
+      initialValues={user}
     >
-      <b>Tambah User</b>
       {contextHolder}
       <Form.Item
         name={"name"}
