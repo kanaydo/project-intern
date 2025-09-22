@@ -1,13 +1,17 @@
 "use client";
 
-import { Button, Table, TableProps } from "antd";
+import { Button, Flex, Table, TableProps } from "antd";
 import { UserEntity } from "./entity";
+import Link from "next/link";
 
 export const UserIndexTable = ({ users }: { users: UserEntity[] }) => {
   const columns: TableProps<UserEntity>["columns"] = [
     {
       title: "Name",
       dataIndex: "name",
+      render: (_, record) => {
+        return <Link href={`/users/${record.id}`}>{record.name}</Link>;
+      },
     },
     {
       title: "Email",
@@ -19,7 +23,7 @@ export const UserIndexTable = ({ users }: { users: UserEntity[] }) => {
     },
     {
       title: "Actions",
-      render: (text, record) => {
+      render: (_, __) => {
         return (
           <div>
             <Button>Edit</Button>
@@ -31,8 +35,11 @@ export const UserIndexTable = ({ users }: { users: UserEntity[] }) => {
   ];
 
   return (
-    <div>
+    <Flex vertical gap={"middle"}>
+      <Button type="primary" href="/users/new">
+        Tambah User
+      </Button>
       <Table<UserEntity> columns={columns} dataSource={users} />
-    </div>
+    </Flex>
   );
 };
