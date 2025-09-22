@@ -1,5 +1,12 @@
-const AboutPage = () => {
-  return <div>hello from about</div>
-}
+import Link from "next/link";
 
-export default AboutPage
+const AboutPage = () => {
+  return (
+    <div>
+      hello from about
+      <Link href="/home">Kembali</Link>
+    </div>
+  );
+};
+
+export default AboutPage;
