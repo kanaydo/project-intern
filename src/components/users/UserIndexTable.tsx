@@ -4,6 +4,7 @@ import { Button, Flex, Table, TableProps } from "antd";
 import { UserEntity } from "./entity";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { UserDestroy } from "./UserDestroy";
 
 export const UserIndexTable = ({ users }: { users: UserEntity[] }) => {
   const router = useRouter();
@@ -28,10 +29,10 @@ export const UserIndexTable = ({ users }: { users: UserEntity[] }) => {
       title: "Actions",
       render: (_, record) => {
         return (
-          <div>
+          <Flex gap={"small"}>
             <Button href={`/users/${record.id}/edit`}>Edit</Button>
-            <Button>Hapus</Button>
-          </div>
+            <UserDestroy user={record} />
+          </Flex>
         );
       },
     },
